@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import Breadcrumb from "../Components/Breadcrumb"
 import ProductBox from './ProductBox'
 import { getAll, changeStatus } from "../../Redux/Actions/ProductActions"
-import Preloader from "../Components/Preloader"
+import Pagination from "../Components/Pagination"
 
 function AllProducts(props) {
 
@@ -77,18 +77,9 @@ function AllProducts(props) {
                             }
                         </div>
                 }
-                <div className="row">
-                    <div className="col-lg-12">
-                        <ul className="pagination justify-content-center mt-4">
-                            <li className={`page-item ${page === 0 ? "disabled" : ""}`}>
-                                <button onClick={prevPage} className="page-link">Prev</button>
-                            </li>
-                            <li className={`page-item ${page === props.allProducts.length ? "disabled" : ""}`}>
-                                <button onClick={nextPage} className="page-link">Next</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+
+                <Pagination prevPage={prevPage} nextPage={nextPage} page={page} allData={props.allProducts} />
+
             </div>
         </div>
     )

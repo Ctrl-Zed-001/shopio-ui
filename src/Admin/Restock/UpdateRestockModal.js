@@ -49,7 +49,7 @@ export default function UpdateRestockModal(props) {
         props.updateRestock(id, restock)
         let inputs = document.getElementsByClassName("unitupdate");
         for (let i = 0; i < inputs.length; i++) {
-            inputs[i].value = 0;
+            inputs[i].value = "";
         }
     }
 
@@ -65,49 +65,51 @@ export default function UpdateRestockModal(props) {
                         </button>
                     </div>
                     <div className="modal-body">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>SKU</th>
-                                    <th>Product</th>
-                                    <th>Incomming</th>
-                                    <th><i className='bx bxs-check-circle text-success'></i> Accepted</th>
-                                    <th><i className='bx bxs-x-circle text-warning' ></i> Canceled</th>
-                                    <th><i className='bx bx-rotate-left text-danger'></i> Returned</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    props.products && props.products.map(product => {
-                                        return (
-                                            <tr key={product._id}>
-                                                <td><b>{product.sku}</b></td>
-                                                <td>
-                                                    <div className="row">
-                                                        <div className="col-3">
-                                                            <img alt="Product display pic" className="img-fluid" src={product.displayurl} />
+                        <div className="table-responsive">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>SKU</th>
+                                        <th>Product</th>
+                                        <th>Incomming</th>
+                                        <th><i className='bx bxs-check-circle text-success'></i> Accepted</th>
+                                        <th><i className='bx bxs-x-circle text-warning' ></i> Canceled</th>
+                                        <th><i className='bx bx-rotate-left text-danger'></i> Returned</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        props.products && props.products.map(product => {
+                                            return (
+                                                <tr key={product._id}>
+                                                    <td><b>{product.sku}</b></td>
+                                                    <td>
+                                                        <div className="row">
+                                                            <div className="col-3 d-none d-sm-block">
+                                                                <img alt="Product display pic" className="img-fluid" src={product.displayurl} />
+                                                            </div>
+                                                            <div className="col-9">
+                                                                <p>{product.name}</p>
+                                                            </div>
                                                         </div>
-                                                        <div className="col-9">
-                                                            <p>{product.name}</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>{product.incomming}</td>
-                                                <td>
-                                                    <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="recieved" onChange={handleChange} />
-                                                </td>
-                                                <td>
-                                                    <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="canceled" onChange={handleChange} />
-                                                </td>
-                                                <td>
-                                                    <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="returned" onChange={handleChange} />
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
+                                                    </td>
+                                                    <td>{product.incomming}</td>
+                                                    <td>
+                                                        <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="recieved" onChange={handleChange} />
+                                                    </td>
+                                                    <td>
+                                                        <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="canceled" onChange={handleChange} />
+                                                    </td>
+                                                    <td>
+                                                        <input placeholder="0" type="number" className="unitupdate form-control form-control-sm" id={product._id} name="returned" onChange={handleChange} />
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div className="modal-footer">
                         <button type="button" data-dismiss="modal" aria-label="Close" className="btn btn-success btn-sm" onClick={() => handleSubmit(props.restockId)}>Save changes</button>

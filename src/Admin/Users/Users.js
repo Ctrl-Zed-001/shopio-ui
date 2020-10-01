@@ -1,15 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Breadcrumb from "../Components/Breadcrumb"
 import Wrapper from '../Wrapper'
 import { connect } from "react-redux"
 import { getAllUsers, addNewUser } from "../../Redux/Actions/UserActions"
 import AddUserModal from "./AddUserModal"
 import { Link } from "react-router-dom"
+import Pagination from "../Components/Pagination"
 
 const Customers = (props) => {
 
+    const [users, setUsers] = useState([]);
+    const [page, setPage] = useState(0);
+
+    useEffect(
+        () => {
+            let current_page_users = props.allUsers.slice(page, page + 15);
+            setUsers(current_page_users)
+        }, [props.allUsers, page]
+    )
+
+    const searchUser = (e) => {
+        if (e.target.value !== "") {
+            let filter_users = props.allUsers.filter(user => {
+                return user.phone.toString().includes(e.target.value)
+            })
+            setUsers(filter_users)
+        }
+    }
+
     const addNewUser = (data) => {
         props.addNewUser(data)
+    }
+
+    const prevPage = () => {
+        setPage(page - 15)
+    }
+
+    const nextPage = () => {
+        setPage(page + 15)
     }
 
     return (
@@ -27,7 +55,7 @@ const Customers = (props) => {
                                         <div className="col-sm-4">
                                             <div className="search-box mr-2 mb-2 d-inline-block">
                                                 <div className="position-relative">
-                                                    <input type="text" className="form-control" placeholder="Search..." />
+                                                    <input onChange={searchUser} type="text" className="form-control" placeholder="Search..." />
                                                     <i className="bx bx-search-alt search-icon"></i>
                                                 </div>
                                             </div>
@@ -54,8 +82,8 @@ const Customers = (props) => {
                                             <tbody>
 
                                                 {
-                                                    props.users.map(user => {
-                                                        let index = props.users.indexOf(user)
+                                                    users.map(user => {
+                                                        let index = users.indexOf(user)
                                                         return (
                                                             <tr key={index}>
                                                                 <td>C00{index + 1}</td>
@@ -87,6 +115,7 @@ const Customers = (props) => {
                         </div>
                     </div>
 
+                    <Pagination prevPage={prevPage} nextPage={nextPage} page={page} allData={props.allUsers} />
 
                 </div>
             </div>
@@ -96,7 +125,7 @@ const Customers = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.users.allUsers
+        allUsers: state.users.allUsers
     }
 }
 

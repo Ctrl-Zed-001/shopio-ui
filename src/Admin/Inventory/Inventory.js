@@ -4,6 +4,7 @@ import Breadcrumb from '../Components/Breadcrumb'
 import { connect } from 'react-redux'
 import { updateStock } from "../../Redux/Actions/InventoryActions"
 import { getAll } from "../../Redux/Actions/ProductActions"
+import Pagination from '../Components/Pagination'
 
 const Inventory = (props) => {
 
@@ -16,7 +17,6 @@ const Inventory = (props) => {
 
     useEffect(
         () => {
-            console.log(page)
             let current_page_products = [...props.allProducts]
             setProducts(current_page_products.slice(page, page + 15))
         }, [props.allProducts, page]
@@ -97,18 +97,7 @@ const Inventory = (props) => {
                         </div>
                     </div>
 
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <ul className="pagination justify-content-center mt-4">
-                                <li className={`page-item ${page === 0 ? "disabled" : ""}`}>
-                                    <button onClick={prevPage} className="page-link">Prev</button>
-                                </li>
-                                <li className={`page-item ${page === props.allProducts.length ? "disabled" : ""}`}>
-                                    <button onClick={nextPage} className="page-link">Next</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <Pagination prevPage={prevPage} nextPage={nextPage} page={page} allData={props.allProducts} />
 
                 </div>
             </div>

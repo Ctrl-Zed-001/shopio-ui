@@ -293,6 +293,9 @@ body[data-sidebar=dark].vertical-collpsed .vertical-menu #sidebar-menu>ul>li:hov
     font-size: 5.25rem;
     line-height: 5.625rem;
 }
+.close{
+    border:0;
+}
 
 @media (max-width: 991.98px){
     .navbar-brand-box .logo-light span.logo-sm {

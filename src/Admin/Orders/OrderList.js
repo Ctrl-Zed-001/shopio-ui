@@ -1,12 +1,37 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Wrapper from "../Wrapper"
 import { connect } from "react-redux"
 import { getAllOrders } from "../../Redux/Actions/OrderActions"
 import { Link } from "react-router-dom"
 import Breadcrumb from "../Components/Breadcrumb"
+import Pagination from "../Components/Pagination"
 
 const OrderList = (props) => {
 
+    const [orders, setOrders] = useState([])
+    const [page, setPage] = useState(0);
+
+    useEffect(
+        () => {
+            let current_page_orders = [...props.allOrders]
+            setOrders(current_page_orders.slice(page, page + 20))
+        }, [props.allOrders, page]
+    )
+
+    const searchOrder = (e) => {
+        let filteredOrders = props.allOrders.filter(order => {
+            return order._id.toString().includes(e.target.value)
+        })
+        setOrders(filteredOrders)
+    }
+
+    const prevPage = () => {
+        setPage(page - 15)
+    }
+
+    const nextPage = () => {
+        setPage(page + 15)
+    }
 
     return (
         <div className="main-content">
@@ -21,7 +46,7 @@ const OrderList = (props) => {
                                         <div className="col-sm-4">
                                             <div className="search-box mr-2 mb-2 d-inline-block">
                                                 <div className="position-relative">
-                                                    <input type="text" className="form-control" placeholder="Search..." />
+                                                    <input onChange={searchOrder} type="text" className="form-control" placeholder="Search..." />
                                                     <i className="bx bx-search-alt search-icon"></i>
                                                 </div>
                                             </div>
@@ -44,7 +69,7 @@ const OrderList = (props) => {
                                             <tbody>
 
                                                 {
-                                                    props.orders.map(order => {
+                                                    orders.map(order => {
                                                         let date = new Date(order.date)
                                                         return (
                                                             <tr key={order._id}>
@@ -72,6 +97,10 @@ const OrderList = (props) => {
                             </div>
                         </div>
                     </div>
+
+                    <Pagination prevPage={prevPage} nextPage={nextPage} page={page} allData={props.allOrders} />
+
+
                 </div>
             </div>
         </div>
@@ -80,7 +109,7 @@ const OrderList = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        orders: state.orders.allOrders
+        allOrders: state.orders.allOrders
     }
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Wrapper from "../Wrapper"
 import Breadcrumb from "../Components/Breadcrumb"
 import { Link } from "react-router-dom"
@@ -7,20 +7,38 @@ import { getAllRestocks } from "../../Redux/Actions/RestockActions"
 import UpdateRestockModal from "./UpdateRestockModal"
 import { updateRestockData } from "../../Redux/Actions/RestockActions"
 import RestockHistoryModal from "./RestockHistoryModal"
+import Pagination from "../Components/Pagination"
 
 const Restock = (props) => {
 
-
+    const [restocks, setRestocks] = useState([]);
     const [selectedRestock, setSelectedRestock] = useState([])
+    const [page, setPage] = useState(0);
+
+
+    useEffect(
+        () => {
+            let current_page_restocks = props.allRestocks
+            setRestocks(current_page_restocks.slice(page, page + 20))
+        }, [props.allRestocks, page]
+    )
 
     const selectRestock = (index) => {
-        setSelectedRestock(props.restocks[index])
+        setSelectedRestock(restocks[index])
     }
 
     const updateRestock = (id, data) => {
-        let findrestock = props.restocks.filter(restock => restock._id === id)
-        let restockindex = props.restocks.indexOf(findrestock[0]);
+        let findrestock = props.allRestocks.filter(restock => restock._id === id)
+        let restockindex = props.allRestocks.indexOf(findrestock[0]);
         props.updateRestockData(restockindex, id, data)
+    }
+
+    const nextPage = () => {
+        setPage(page + 15)
+    }
+
+    const prevPage = () => {
+        setPage(page - 15)
     }
 
     return (
@@ -66,8 +84,8 @@ const Restock = (props) => {
                                             <tbody>
 
                                                 {
-                                                    props.restocks.map(restock => {
-                                                        let index = props.restocks.indexOf(restock)
+                                                    restocks.map(restock => {
+                                                        let index = restocks.indexOf(restock)
                                                         let date = new Date(restock.expected);
                                                         date = date.toDateString();
                                                         return (
@@ -110,7 +128,7 @@ const Restock = (props) => {
                             </div>
                         </div>
                     </div>
-
+                    <Pagination prevPage={prevPage} nextPage={nextPage} page={page} allData={props.allRestocks} />
                 </div>
             </div>
         </div>
@@ -119,7 +137,7 @@ const Restock = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        restocks: state.restocks.allRestocks
+        allRestocks: state.restocks.allRestocks
     }
 }
 
