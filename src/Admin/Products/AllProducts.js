@@ -13,7 +13,6 @@ function AllProducts(props) {
 
     useEffect(
         () => {
-            console.log("changed")
             let current_page_products = [...props.allProducts]
             setProducts(current_page_products.slice(page, page + 15))
         }, [props.allProducts, page]

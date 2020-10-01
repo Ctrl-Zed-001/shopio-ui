@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Wrapper from "../Wrapper"
 import Breadcrumb from '../Components/Breadcrumb'
 import { connect } from 'react-redux'
@@ -7,11 +7,20 @@ import { getAll } from "../../Redux/Actions/ProductActions"
 
 const Inventory = (props) => {
 
+    const [products, setProducts] = useState([])
     const [stock, setStock] = useState({})
-
+    const [page, setPage] = useState(0);
     const [savebutton, setSavebutton] = useState({
         id: ""
     })
+
+    useEffect(
+        () => {
+            console.log(page)
+            let current_page_products = [...props.allProducts]
+            setProducts(current_page_products.slice(page, page + 15))
+        }, [props.allProducts, page]
+    )
 
     const handleChange = (e) => {
         setStock({
@@ -27,6 +36,13 @@ const Inventory = (props) => {
         props.updateStock(id, stock.newstock)
     }
 
+    const nextPage = () => {
+        setPage(page + 15)
+    }
+
+    const prevPage = () => {
+        setPage(page - 15)
+    }
 
 
     return (
@@ -52,7 +68,7 @@ const Inventory = (props) => {
                                             </thead>
                                             <tbody>
                                                 {
-                                                    props.products.map(product => {
+                                                    products.map(product => {
                                                         return (
                                                             <tr key={product._id} className="align-middle inventory-list">
                                                                 <td scope="row">{product.sku}</td>
@@ -81,6 +97,19 @@ const Inventory = (props) => {
                         </div>
                     </div>
 
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <ul className="pagination justify-content-center mt-4">
+                                <li className={`page-item ${page === 0 ? "disabled" : ""}`}>
+                                    <button onClick={prevPage} className="page-link">Prev</button>
+                                </li>
+                                <li className={`page-item ${page === props.allProducts.length ? "disabled" : ""}`}>
+                                    <button onClick={nextPage} className="page-link">Next</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -89,7 +118,7 @@ const Inventory = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        products: state.products.allProducts
+        allProducts: state.products.allProducts
     }
 }
 
